@@ -1,6 +1,8 @@
 $(function(){
+    //global variable for tracking current query
     var gQuery = null;
-	
+
+    //if user selects "remember last search" option, set the current search to the last search
 	chrome.storage.sync.get("remember", function(obj) {
 		if(obj.remember) {
 			var lastSearch;
@@ -13,18 +15,21 @@ $(function(){
 			});
 		}
 	});
-	
+
+    //sends a message to the current tab
     function sendMessageToTab(msg) {
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 chrome.tabs.sendMessage(tabs[0].id, msg);
         });
     }
-    
+
+    //starts a query
     function doQuery(userText) {
         gQuery = userText;
         sendMessageToTab({action: "setquery", data: userText});
     }
-    
+
+    //goes to the next word in the list, or clears everything if field is empty
     function next() {
         var userText = $("#searchText").val();
         if(userText == "") {
@@ -36,7 +41,8 @@ $(function(){
             sendMessageToTab({action: "next"});
         }
     }
-    
+
+    //goes to the previous word in the list, or clears everything if field is empty
     function previous() {
         var userText = $("#searchText").val();
         if(userText == "") {
@@ -48,15 +54,18 @@ $(function(){
             sendMessageToTab({action: "previous"});
         }
     }
-	
+
+    //sends message to reset everything
 	function reset() {
 		sendMessageToTab({action: "reset"});
 	}
-	
+
+    //updates synonyms section
 	function changeSynonyms(to) {
 		$("#synonyms").text(to);
 	}
-	
+
+    //updates the different numbers on the popup
 	function updateNum(which, to) {
 		switch(which) {
 			case 1:
@@ -69,7 +78,8 @@ $(function(){
 				$("#wordNum").text(to);
 		}
 	}
-	
+
+    //toggles whether the search box is red
 	function makeRed(todo) {
 		if(todo) {
 			$("#searchText").css("border-color", "red");
@@ -77,20 +87,24 @@ $(function(){
 			$("#searchText").css("border-color", "");
 		}
 	}
-	
+
+    //links three of the buttons to their respective functions
 	$("#next").click(next);
     $("#previous").click(previous);
     $("#counter").click(reset);
-    
+
+    //links enter key to next function
     $(document).on("keydown", function(e) {
 		//enter
         if (e.keyCode == 13) {
             next();
         }
     });
-	
+
+    //establishes connection to searchScript
 	var port = chrome.extension.connect({name: "Background Close to Unmark"});
-	
+
+    //listens to messages from searchScript.js and triggers respective methods
 	chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		switch(request.action) {
 			case "updateFirst":
