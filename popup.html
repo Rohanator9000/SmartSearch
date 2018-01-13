@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Smart Findr</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+	</head>
+	<body>
+		<input type="text" id="searchText" autofocus>
+
+		<div class="btn-group btn-group-justified" role="group">
+			<a class="btn btn-primary btn-xs" role="button" id="counter"><span id="firstNum">0</span> of <span id="secNum">0</span></a>
+    		<a class="btn btn-primary btn-xs" role="button" id="synonymNum" data-toggle="collapse" data-target="#synonyms">synonyms <span id="wordNum" class="badge">0</span></a>
+		</div>
+		<div class="btn-group btn-group-justified" role="group">
+			<a class="btn btn-primary btn-xs" role="button" id="previous">Previous</a>
+    		<a class="btn btn-primary btn-xs" role="button" id="next">Next</a>
+		</div>
+		<div id="synonyms" class="well well-sm collapse">no synonyms :(</div>
+
+		<script type="text/javascript" src="jquery-2.2.4.min.js"></script>
+		<script type="text/javascript" src="bootstrap.min.js"></script>
+		<script type="text/javascript" src="popup.js"></script>
+	</body>
+</html>
