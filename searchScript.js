@@ -23,44 +23,44 @@ var splitData = readDatabase();
 //QUERY SET
 
 function handleSetQuery(findWord) {
-	
+
 	//STORE FOR FUTURE INSERTION
 	chrome.storage.sync.set({"lastSearch": findWord});
-	
+
 	//CHECK TO SEE IF PARTIAL
 	chrome.storage.sync.get("partial", function(obj) {
-		
+
 		if (obj.partial) {
 			options.accuracy = "partially";
 		} else {
 			options.accuracy = "exactly";
 		}
-		
+
 		handleClear();
 		$("body").mark(findWord, options);
-		
+
 		chrome.storage.sync.get("partialSyns", function(obj2) {
-			
+
 			if (obj2.partialSyns) {
 				options.accuracy = "partially";
 			} else {
 				options.accuracy = "exactly";
 			}
-			
+
 			//GET + HIGHLIGHT SYNONYMS
-			var synonyms = getSynonyms(findWord);			
+			var synonyms = getSynonyms(findWord);
 			synonyms.forEach(function(element, index, array) {
 				$("body").mark(element, options);
 			});
-			
-			
-			numDoms = doms.length;			
-			if (numDoms > 0) {				
+
+
+			numDoms = doms.length;
+			if (numDoms > 0) {
 				chrome.runtime.sendMessage({action: "makeRed", data: false});
 				sortDoms(0, numDoms - 1);
 				getToFirstDom();
 				chrome.runtime.sendMessage({action: "updateSecond", data: numDoms});
-				
+
 				//UPDATE SYNONYMS
 				updateSynonyms(findWord);
 				chrome.runtime.sendMessage({action: "updateSynNum", data: pageSynsNum});
@@ -75,9 +75,9 @@ function getToFirstDom() {
 	while(currentIndex < doms.length && !isVisible(doms[currentIndex])) {
 		currentIndex++;
 	}
-	
+
 	currentIndex = currentIndex == doms.length ? 0 : currentIndex;
-	
+
 	doms[currentIndex].scrollIntoViewIfNeeded();
 	$(doms[currentIndex]).addClass("highlightSelected");
 	chrome.runtime.sendMessage({action: "updateFirst", data: currentIndex});
@@ -86,7 +86,7 @@ function getToFirstDom() {
 function isVisible(el) {
 	var docViewTop = $(window).scrollTop();
     var docViewBottom = docViewTop + $(window).height();
-	
+
     var elTop = $(el).offset().top;
     var elBottom = elTop + $(el).height();
 
@@ -110,7 +110,7 @@ function updateSynonyms(findWord) {
 function getSynonyms(findWord) {
 	var synonymArray =[];
 	var index = 1;
-	
+
 	while(index < splitData.length) {
 		var wordGroup = splitData[index];
 		var words = wordGroup.split("|");
@@ -129,7 +129,7 @@ function getSynonyms(findWord) {
 			index += 1 + numDefs;
 		}
 	}
-	
+
 	return synonymArray;
 }
 
@@ -188,11 +188,11 @@ function handleClear() {
     doms = new Array();
     currentIndex = 0;
     numDoms = 0;
-	
+
 	//RESET COUNTER
 	chrome.runtime.sendMessage({action: "updateFirst", data: -1});
 	chrome.runtime.sendMessage({action: "updateSecond", data: 0});
-	
+
 	//RESET SYNONYMS
 	pageSynsNum = 0;
 	pageSyns = [];

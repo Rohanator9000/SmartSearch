@@ -3,7 +3,7 @@ function saveOptions() {
 	var remove = $("#yesRemove").is("input:checked") ? true : false;
 	var partial = $("#yesPartial").is("input:checked") ? true : false;
 	var partialSyns = $("#yesPartialSyns").is("input:checked") ? true : false;
-	
+
 	chrome.storage.sync.set({
 		"remember" : remember,
 		"remove" : remove,
